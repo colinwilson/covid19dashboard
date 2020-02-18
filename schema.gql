@@ -1,0 +1,204 @@
+directive @embedded on OBJECT
+directive @collection(name: String!) on OBJECT
+directive @index(name: String!) on FIELD_DEFINITION
+directive @resolver(
+  name: String
+  paginated: Boolean! = false
+) on FIELD_DEFINITION
+directive @relation(name: String) on FIELD_DEFINITION
+directive @unique(index: String) on FIELD_DEFINITION
+enum AllowedType {
+  confirmed
+  death
+  recovered
+}
+
+type Case {
+  # Source of reported case.
+  source: [String!]
+  # Case location information.
+  location: Location
+  # The document's ID.
+  _id: ID!
+  # Total number of reported cases.
+  total: Int
+  # Case ID.
+  id: ID!
+  # Date case was reported (ISO-8601 Format).
+  date: Time
+  # Type of case ('Confirmed', 'Death', 'Recovered').
+  type: AllowedType
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Case' input values
+input CaseInput {
+  # Case ID.
+  id: ID!
+  # Date case was reported (ISO-8601 Format).
+  date: Time
+  # Type of case ('Confirmed', 'Death', 'Recovered').
+  type: AllowedType
+  # Total number of reported cases.
+  total: Int
+  # Case location information.
+  location: CaseLocationRelation
+  # Source of reported case.
+  source: [String!]
+}
+
+# Allow manipulating the relationship between the types 'Case' and 'Location' using the field 'Case.location'.
+input CaseLocationRelation {
+  # Create a document of type 'Location' and associate it with the current document.
+  create: LocationInput
+  # Connect a document of type 'Location' with the current document using its ID.
+  connect: ID
+  # If true, disconnects this document from 'Location'
+  disconnect: Boolean
+}
+
+# The pagination object for elements of type 'Case'.
+type CasePage {
+  # The elements of type 'Case' in this page.
+  data: [Case]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+scalar Date
+
+type Location {
+  # Latitude of location.
+  latitude: Float!
+  # State name.
+  state: String
+  # The ISO 3166-2 code of the location.
+  isoid: String
+  # The document's ID.
+  _id: ID!
+  # Population.
+  population: Int
+  # Country name.
+  country: String
+  # Longtitude of location.
+  longitude: Float!
+  # Country ISO code.
+  country_code: String
+  # The id of the location.
+  id: ID!
+  # Population Density (KM²).
+  density: Int
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Location' input values
+input LocationInput {
+  # The id of the location.
+  id: ID!
+  # The ISO 3166-2 code of the location.
+  isoid: String
+  # Country name.
+  country: String
+  # Country ISO code.
+  country_code: String
+  # State name.
+  state: String
+  # Longtitude of location.
+  longitude: Float!
+  # Latitude of location.
+  latitude: Float!
+  # Population.
+  population: Int
+  # Population Density (KM²).
+  density: Int
+}
+
+# The pagination object for elements of type 'Location'.
+type LocationPage {
+  # The elements of type 'Location' in this page.
+  data: [Location]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# The `Long` scalar type
+ represents non-fractional signed whole numeric values.
+# Long can represent values between -(2^63) and 2^63 - 1.
+scalar Long
+
+type Mutation {
+  # Create a new document in the collection of 'Case'
+  createCase(
+    # 'Case' input values
+    data: CaseInput!
+  ): Case!
+  # Delete an existing document in the collection of 'Location'
+  deleteLocation(
+    # The 'Location' document's ID
+    id: ID!
+  ): Location
+  # Delete an existing document in the collection of 'Case'
+  deleteCase(
+    # The 'Case' document's ID
+    id: ID!
+  ): Case
+  # Update an existing document in the collection of 'Case'
+  updateCase(
+    # The 'Case' document's ID
+    id: ID!
+    # 'Case' input values
+    data: CaseInput!
+  ): Case
+  # Update an existing document in the collection of 'Location'
+  updateLocation(
+    # The 'Location' document's ID
+    id: ID!
+    # 'Location' input values
+    data: LocationInput!
+  ): Location
+  # Create a new document in the collection of 'Location'
+  createLocation(
+    # 'Location' input values
+    data: LocationInput!
+  ): Location!
+}
+
+type Query {
+  # Get all locations
+  locations(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): LocationPage!
+  # Find a document from the collection of 'Location' by its id.
+  findLocationByID(
+    # The 'Location' document's ID
+    id: ID!
+  ): Location
+  # Get a specific location by ID
+  location(id: ID!): Location
+  # Find a document from the collection of 'Case' by its id.
+  findCaseByID(
+    # The 'Case' document's ID
+    id: ID!
+  ): Case
+  # Get a specific case by ID
+  case(id: ID!): Case
+  # Get all cases
+  cases(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): CasePage!
+}
+
+scalar Time
+
