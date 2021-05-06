@@ -20,7 +20,7 @@
     "gatsby-plugin-sharp": "^2.4.3",
     "gatsby-source-filesystem": "^2.1.46",
     "gatsby-transformer-sharp": "^2.3.13",
-    "highcharts": "^8.0.0",
+    "highcharts": "^9.0.0",
     "highcharts-react-official": "^2.2.2",
     "node-sass": "^4.13.1",
     "proj4": "^2.6.0",
