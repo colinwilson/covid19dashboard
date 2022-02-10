@@ -22,7 +22,7 @@
     "gatsby-transformer-sharp": "^2.3.13",
     "highcharts": "^9.0.0",
     "highcharts-react-official": "^2.2.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "proj4": "^2.6.0",
     "prop-types": "^15.7.2",
     "axios": "^0.21.1",
